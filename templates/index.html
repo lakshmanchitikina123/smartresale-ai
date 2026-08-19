@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>SmartResale AI | Smart Used Item Marketplace</title>
+
+
+    <!-- Bootstrap -->
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+
+    <!-- Bootstrap Icons -->
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+        rel="stylesheet">
+
+
+    <!-- Google Font -->
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+
+    <!-- Custom CSS -->
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+        <!-- BRAND -->
+        <a class="navbar-brand" href="/">
+            <span class="brand-icon"><i class="bi bi-recycle"></i></span>
+            SmartResale <span>AI</span>
+        </a>
+
+        <!-- MOBILE BUTTON -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <i class="bi bi-list"></i>
+        </button>
+
+        <!-- NAVIGATION -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">
+                        <i class="bi bi-house"></i> Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/analyze' %}active{% endif %}" href="/analyze">
+                        <i class="bi bi-stars"></i> Analyze Item
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/sell' %}active{% endif %}" href="/sell">
+                        <i class="bi bi-tag"></i> Sell
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/marketplace' %}active{% endif %}" href="/marketplace">
+                        <i class="bi bi-shop"></i> Marketplace
+                    </a>
+                </li>
+                {% if session.get('user_id') %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/dashboard' %}active{% endif %}" href="/dashboard">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item position-relative">
+                        <a class="nav-link {% if request.path == '/notifications' %}active{% endif %}" href="/notifications">
+                            <i class="bi bi-bell"></i>
+                            {% if unread_notifications_count > 0 %}
+                                <span class="position-absolute top-1 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 9px; padding: 3px 6px;">
+                                    {{ unread_notifications_count }}
+                                </span>
+                            {% endif %}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </a>
+                    </li>
+                
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+
+<!-- =====================================================
+     HERO SECTION
+===================================================== -->
+
+<section
+    class="hero-section"
+    id="home">
+
+
+    <div class="container">
+
+
+        <div class="row align-items-center">
+
+
+            <!-- HERO TEXT -->
+
+            <div class="col-lg-7">
+
+
+                <!-- BADGE -->
+
+                <div class="hero-badge">
+
+                    <i class="bi bi-stars"></i>
+
+                    AI-Powered Resale Intelligence
+
+                </div>
+
+
+                <!-- TITLE -->
+
+                <h1>
+
+                    Know the value of your
+                    <span>used items.</span>
+
+                </h1>
+
+
+                <!-- DESCRIPTION -->
+
+                <p class="hero-text">
+
+                    SmartResale AI combines machine learning,
+                    marketplace data and intelligent valuation
+                    techniques to help you understand the
+                    resale value of your used household items.
+
+                </p>
+
+
+                <!-- BUTTONS -->
+
+                <div class="hero-buttons">
+
+
+                    <!-- ANALYZE -->
+
+                    <a
+                        href="/analyze"
+                        class="btn btn-primary-custom">
+
+                        <i class="bi bi-stars"></i>
+
+                        Analyze My Item
+
+                    </a>
+
+
+                    <!-- MARKETPLACE -->
+
+                    <a
+                        href="/marketplace"
+                        class="btn btn-outline-custom">
+
+                        <i class="bi bi-shop"></i>
+
+                        Browse Marketplace
+
+                    </a>
+
+                </div>
+
+
+                <!-- STATS -->
+
+                <div class="hero-stats">
+
+
+                    <div>
+
+                        <strong>AI</strong>
+
+                        <small>
+                            Powered
+                        </small>
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>ML</strong>
+
+                        <small>
+                            Price Prediction
+                        </small>
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>BUY</strong>
+
+                        <small>
+                            &amp; SELL
+                        </small>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- HERO CARD -->
+
+            <div class="col-lg-5">
+
+
+                <div class="hero-card">
+
+
+                    <!-- FLOATING ICON -->
+
+                    <div class="floating-icon icon-one">
+
+                        <i class="bi bi-currency-rupee"></i>
+
+                    </div>
+
+
+                    <div class="floating-icon icon-two">
+
+                        <i class="bi bi-graph-up-arrow"></i>
+
+                    </div>
+
+
+                    <!-- CARD -->
+
+                    <div class="hero-card-inner">
+
+
+                        <div class="mini-label">
+
+                            <i class="bi bi-robot"></i>
+
+                            AI VALUATION
+
+                        </div>
+
+
+                        <h3>
+
+                            Smart Pricing
+
+                        </h3>
+
+
+                        <p>
+
+                            Get an estimated resale value
+                            using historical marketplace
+                            data and item characteristics.
+
+                        </p>
+
+
+                        <div class="price-preview">
+
+                            <span>
+
+                                Estimated Resale Value
+
+                            </span>
+
+
+                            <strong>
+
+                                <i
+                                    class="bi bi-currency-rupee">
+                                </i>
+
+                                AI Prediction
+
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     HOW IT WORKS
+===================================================== -->
+
+<section
+    class="analyze-section"
+    id="how-it-works">
+
+
+    <div class="container">
+
+
+        <!-- SECTION HEADING -->
+
+        <div class="section-heading">
+
+
+            <div class="section-tag">
+
+                <i class="bi bi-cpu"></i>
+
+                HOW SMARTRESALE AI WORKS
+
+            </div>
+
+
+            <h2>
+
+                From item to smart valuation
+
+            </h2>
+
+
+            <p>
+
+                Our system combines machine learning
+                with additional item information to
+                provide a more practical resale estimate.
+
+            </p>
+
+        </div>
+
+
+
+        <!-- STEPS -->
+
+        <div class="row g-4">
+
+
+            <!-- STEP 1 -->
+
+            <div class="col-md-4">
+
+
+                <div class="feature-card">
+
+
+                    <div class="feature-icon">
+
+                        <i class="bi bi-box-seam"></i>
+
+                    </div>
+
+
+                    <h4>
+
+                        1. Enter Item Details
+
+                    </h4>
+
+
+                    <p>
+
+                        Provide information such as category,
+                        brand, condition, location, original
+                        purchase price and item age.
+
+                    </p>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- STEP 2 -->
+
+            <div class="col-md-4">
+
+
+                <div class="feature-card">
+
+
+                    <div class="feature-icon">
+
+                        <i class="bi bi-cpu"></i>
+
+                    </div>
+
+
+                    <h4>
+
+                        2. AI Valuation
+
+                    </h4>
+
+
+                    <p>
+
+                        The trained ML model estimates the
+                        market value and our hybrid valuation
+                        layer considers age and condition.
+
+                    </p>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- STEP 3 -->
+
+            <div class="col-md-4">
+
+
+                <div class="feature-card">
+
+
+                    <div class="feature-icon">
+
+                        <i class="bi bi-graph-up-arrow"></i>
+
+                    </div>
+
+
+                    <h4>
+
+                        3. Get Resale Estimate
+
+                    </h4>
+
+
+                    <p>
+
+                        Receive an estimated resale value
+                        along with a suggested selling
+                        price range.
+
+                    </p>
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- CTA -->
+
+        <div
+            class="text-center"
+            style="margin-top:45px;">
+
+
+            <a
+                href="/analyze"
+                class="btn btn-primary-custom">
+
+                <i class="bi bi-stars"></i>
+
+                Try AI Valuation
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     FEATURES
+===================================================== -->
+
+<section
+    class="features-section"
+    id="features">
+
+
+    <div class="container">
+
+
+        <!-- HEADING -->
+
+        <div class="section-heading">
+
+
+            <div class="section-tag">
+
+                <i class="bi bi-stars"></i>
+
+                SMART FEATURES
+
+            </div>
+
+
+            <h2>
+
+                More than just price prediction
+
+            </h2>
+
+
+            <p>
+
+                SmartResale AI is designed to become
+                a complete used-item buying and selling
+                platform.
+
+            </p>
+
+        </div>
+
+
+
+        <!-- FEATURE CARDS -->
+
+        <div class="row g-4">
+
+
+            <!-- PRICE -->
+
+            <div class="col-md-6 col-lg-4">
+
+
+                <div class="feature-card">
+
+
+                    <div class="feature-icon">
+
+                        <i class="bi bi-currency-exchange"></i>
+
+                    </div>
+
+
+                    <h4>
+
+                        AI Price Prediction
+
+                    </h4>
+
+
+                    <p>
+
+                        Machine learning estimates the
+                        potential resale value using
+                        historical marketplace listings.
+
+                    </p>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- HYBRID -->
+
+            <div class="col-md-6 col-lg-4">
+
+
+                <div class="feature-card">
+
+
+                    <div class="feature-icon">
+
+                        <i class="bi bi-graph-up"></i>
+
+                    </div>
+
+
+                    <h4>
+
+                        Hybrid Valuation
+
+                    </h4>
+
+
+                    <p>
+
+                        Combines ML-based market estimation
+                        with age and condition based
+                        depreciation analysis.
+
+                    </p>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- MARKETPLACE -->
+
+            <div class="col-md-6 col-lg-4">
+
+
+                <div class="feature-card">
+
+
+                    <div class="feature-icon">
+
+                        <i class="bi bi-shop"></i>
+
+                    </div>
+
+
+                    <h4>
+
+                        Buy &amp; Sell Marketplace
+
+                    </h4>
+
+
+                    <p>
+
+                        Sellers can publish used items and
+                        buyers can browse available listings.
+
+                    </p>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- SIMILAR ITEMS -->
+
+            <div class="col-md-6 col-lg-4">
+
+
+                <div class="feature-card">
+
+
+                    <div class="feature-icon">
+
+                        <i class="bi bi-search"></i>
+
+                    </div>
+
+
+                    <h4>
+
+                        Similar Items
+
+                    </h4>
+
+
+                    <p>
+
+                        Find similar products and compare
+                        marketplace listings before buying
+                        or selling.
+
+                    </p>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- LISTING ASSISTANT -->
+
+            <div class="col-md-6 col-lg-4">
+
+
+                <div class="feature-card">
+
+
+                    <div class="feature-icon">
+
+                        <i class="bi bi-magic"></i>
+
+                    </div>
+
+
+                    <h4>
+
+                        AI Listing Assistant
+
+                    </h4>
+
+
+                    <p>
+
+                        Generate better item descriptions
+                        and improve the quality of your
+                        marketplace listing.
+
+                    </p>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- SELLING TIPS -->
+
+            <div class="col-md-6 col-lg-4">
+
+
+                <div class="feature-card">
+
+
+                    <div class="feature-icon">
+
+                        <i class="bi bi-lightbulb"></i>
+
+                    </div>
+
+
+                    <h4>
+
+                        Smart Selling Tips
+
+                    </h4>
+
+
+                    <p>
+
+                        Get useful suggestions to help
+                        sellers present their products
+                        more effectively.
+
+                    </p>
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     SELL CTA
+===================================================== -->
+
+<section
+    class="analyze-section">
+
+
+    <div class="container">
+
+
+        <div
+            class="section-heading"
+            style="margin-bottom:30px;">
+
+
+            <div class="section-tag">
+
+                <i class="bi bi-tag"></i>
+
+                READY TO SELL?
+
+            </div>
+
+
+            <h2>
+
+                Find the right value for your item.
+
+            </h2>
+
+
+            <p>
+
+                Use our AI valuation system and then
+                publish your item on the SmartResale
+                marketplace.
+
+            </p>
+
+
+        </div>
+
+
+        <div class="text-center">
+
+
+            <a
+                href="/sell"
+                class="btn btn-primary-custom">
+
+                <i class="bi bi-stars"></i>
+
+                Get AI Resale Valuation
+
+            </a>
+
+
+            <a
+                href="/marketplace"
+                class="btn btn-outline-custom ms-2">
+
+                <i class="bi bi-shop"></i>
+
+                View Marketplace
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+
+    <div class="container">
+
+
+        <div class="footer-content">
+
+
+            <!-- BRAND -->
+
+            <div>
+
+
+                <div class="footer-brand">
+
+
+                    <span class="brand-icon">
+
+                        <i class="bi bi-recycle"></i>
+
+                    </span>
+
+
+                    SmartResale AI
+
+
+                </div>
+
+
+                <p>
+
+                    AI-powered intelligence for smarter
+                    used-item resale decisions.
+
+                </p>
+
+            </div>
+
+
+
+            <!-- RIGHT -->
+
+            <div class="footer-right">
+
+
+                <span>
+
+                    Built with Machine Learning &amp; AI
+
+                </span>
+
+
+                <i class="bi bi-heart-fill"></i>
+
+            </div>
+
+
+        </div>
+
+
+
+        <div class="footer-bottom">
+
+
+            © 2026 SmartResale AI.
+            All rights reserved.
+
+
+        </div>
+
+
+    </div>
+
+</footer>
+
+
+
+<!-- =====================================================
+     BOOTSTRAP JS
+===================================================== -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
+</body>
+
+</html>

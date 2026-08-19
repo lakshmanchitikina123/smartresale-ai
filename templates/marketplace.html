@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Marketplace | SmartResale AI</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        .marketplace-page {
+            min-height: 100vh;
+            padding: 120px 20px 80px;
+        }
+
+        .marketplace-container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .filter-panel {
+            background: #13131d;
+            border: 1px solid #292936;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .prod-card {
+            background: #13131d;
+            border: 1px solid #292936;
+            border-radius: 18px;
+            overflow: hidden;
+            transition: 0.25s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .prod-card:hover {
+            transform: translateY(-5px);
+            border-color: #514b7b;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.28);
+        }
+
+        .prod-img-box {
+            height: 180px;
+            background:
+                radial-gradient(
+                    circle at 50% 40%,
+                    rgba(113,87,255,0.1),
+                    transparent 50%
+                ),
+                #0d0d15;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .seller-box {
+            background: rgba(113,87,255,0.06);
+            border: 1px solid rgba(113,87,255,0.15);
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 12px;
+        }
+
+        .seller-name {
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .seller-contact {
+            color: #8c8cab;
+            font-size: 11px;
+        }
+
+        .contact-btn {
+            border-radius: 9px;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 8px 10px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: 0.2s;
+        }
+
+        .call-btn {
+            color: #ffffff;
+            background: rgba(113,87,255,0.15);
+            border: 1px solid rgba(113,87,255,0.3);
+        }
+
+        .call-btn:hover {
+            color: #ffffff;
+            background: #7157ff;
+        }
+
+        .whatsapp-btn {
+            color: #ffffff;
+            background: rgba(37,211,102,0.12);
+            border: 1px solid rgba(37,211,102,0.25);
+        }
+
+        .whatsapp-btn:hover {
+            color: #ffffff;
+            background: #25d366;
+        }
+
+        .hover-purple:hover {
+            color: #9b8cff !important;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- =========================================================
+     NAVBAR
+========================================================= -->
+
+<nav class="navbar navbar-expand-lg fixed-top">
+
+    <div class="container">
+
+        <!-- BRAND -->
+        <a class="navbar-brand" href="/">
+            <span class="brand-icon">
+                <i class="bi bi-recycle"></i>
+            </span>
+
+            SmartResale <span>AI</span>
+        </a>
+
+        <!-- MOBILE BUTTON -->
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav">
+
+            <i class="bi bi-list"></i>
+        </button>
+
+        <!-- NAVIGATION -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+
+            <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item">
+                    <a
+                        class="nav-link {% if request.path == '/' %}active{% endif %}"
+                        href="/">
+
+                        <i class="bi bi-house"></i>
+                        Home
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a
+                        class="nav-link {% if request.path == '/analyze' %}active{% endif %}"
+                        href="/analyze">
+
+                        <i class="bi bi-stars"></i>
+                        Analyze Item
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a
+                        class="nav-link {% if request.path == '/sell' %}active{% endif %}"
+                        href="/sell">
+
+                        <i class="bi bi-tag"></i>
+                        Sell
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a
+                        class="nav-link {% if request.path == '/marketplace' %}active{% endif %}"
+                        href="/marketplace">
+
+                        <i class="bi bi-shop"></i>
+                        Marketplace
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+
+<!-- =========================================================
+     MARKETPLACE
+========================================================= -->
+
+<section class="marketplace-page">
+
+    <div class="marketplace-container">
+
+        <!-- HEADER -->
+
+        <div class="text-center mb-5">
+
+            <div class="section-tag mb-3">
+                <i class="bi bi-shop"></i>
+                Verified Listings
+            </div>
+
+            <h1 class="fw-bold text-white mb-2">
+                Second-Hand Marketplace
+            </h1>
+
+            <p class="text-muted">
+                Browse items listed by sellers or search by category and price range.
+            </p>
+
+        </div>
+
+
+        <!-- FLASH MESSAGES -->
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                {% for category, message in messages %}
+
+                    <div
+                        class="alert alert-{{ category if category != 'error' else 'danger' }}
+                               alert-dismissible fade show mb-4"
+                        role="alert"
+                        style="
+                            font-size:13px;
+                            border-radius:10px;
+                            background:rgba(113,87,255,0.06);
+                            border-color:rgba(113,87,255,0.15);
+                            color:#9b8cff;
+                        ">
+
+                        {{ message }}
+
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"
+                            aria-label="Close"
+                            style="filter:invert(1);">
+                        </button>
+
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <!-- =====================================================
+             SEARCH AND FILTER
+        ====================================================== -->
+
+        <div class="filter-panel">
+
+            <form action="/marketplace" method="GET">
+
+                <div class="row g-3">
+
+                    <!-- SEARCH -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label mb-1">
+                            Search Keywords
+                        </label>
+
+                        <input
+                            type="text"
+                            name="q"
+                            class="form-control-custom"
+                            placeholder="Title, features, tags..."
+                            value="{{ q }}">
+
+                    </div>
+
+
+                    <!-- CATEGORY -->
+
+                    <div class="col-md-3 col-6">
+
+                        <label class="form-label mb-1">
+                            Category
+                        </label>
+
+                        <select
+                            name="category"
+                            class="form-control-custom">
+
+                            <option value="">
+                                All Categories
+                            </option>
+
+                            <option
+                                value="Furniture & Home Decor"
+                                {% if category == 'Furniture & Home Decor' %}selected{% endif %}>
+                                Furniture & Home Decor
+                            </option>
+
+                            <option
+                                value="Electronics"
+                                {% if category == 'Electronics' %}selected{% endif %}>
+                                Electronics
+                            </option>
+
+                            <option
+                                value="Home Appliances"
+                                {% if category == 'Home Appliances' %}selected{% endif %}>
+                                Home Appliances
+                            </option>
+
+                            <option
+                                value="Kitchen"
+                                {% if category == 'Kitchen' %}selected{% endif %}>
+                                Kitchen
+                            </option>
+
+                            <option
+                                value="Kids"
+                                {% if category == 'Kids' %}selected{% endif %}>
+                                Kids
+                            </option>
+
+                            <option
+                                value="Books, Sports & Hobbies"
+                                {% if category == 'Books, Sports & Hobbies' %}selected{% endif %}>
+                                Books, Sports & Hobbies
+                            </option>
+
+                            <option
+                                value="Other"
+                                {% if category == 'Other' %}selected{% endif %}>
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- CONDITION -->
+
+                    <div class="col-md-3 col-6">
+
+                        <label class="form-label mb-1">
+                            Condition
+                        </label>
+
+                        <select
+                            name="condition"
+                            class="form-control-custom">
+
+                            <option value="">
+                                Any Condition
+                            </option>
+
+                            <option
+                                value="New"
+                                {% if condition == 'New' %}selected{% endif %}>
+                                New
+                            </option>
+
+                            <option
+                                value="Like New"
+                                {% if condition == 'Like New' %}selected{% endif %}>
+                                Like New
+                            </option>
+
+                            <option
+                                value="Good"
+                                {% if condition == 'Good' %}selected{% endif %}>
+                                Good
+                            </option>
+
+                            <option
+                                value="Fair"
+                                {% if condition == 'Fair' %}selected{% endif %}>
+                                Fair
+                            </option>
+
+                            <option
+                                value="Used"
+                                {% if condition == 'Used' %}selected{% endif %}>
+                                Used
+                            </option>
+
+                            <option
+                                value="Poor"
+                                {% if condition == 'Poor' %}selected{% endif %}>
+                                Poor
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- LOCATION -->
+
+                    <div class="col-md-2 col-6">
+
+                        <label class="form-label mb-1">
+                            Location
+                        </label>
+
+                        <input
+                            type="text"
+                            name="location"
+                            class="form-control-custom"
+                            placeholder="e.g. Hyderabad"
+                            value="{{ location }}">
+
+                    </div>
+
+
+                    <!-- MIN PRICE -->
+
+                    <div class="col-md-3 col-6">
+
+                        <label class="form-label mb-1">
+                            Min Price (₹)
+                        </label>
+
+                        <input
+                            type="number"
+                            name="price_min"
+                            class="form-control-custom"
+                            placeholder="0"
+                            value="{{ price_min }}">
+
+                    </div>
+
+
+                    <!-- MAX PRICE -->
+
+                    <div class="col-md-3 col-6">
+
+                        <label class="form-label mb-1">
+                            Max Price (₹)
+                        </label>
+
+                        <input
+                            type="number"
+                            name="price_max"
+                            class="form-control-custom"
+                            placeholder="999999"
+                            value="{{ price_max }}">
+
+                    </div>
+
+
+                    <!-- SORT -->
+
+                    <div class="col-md-3 col-6">
+
+                        <label class="form-label mb-1">
+                            Sort By
+                        </label>
+
+                        <select
+                            name="sort"
+                            class="form-control-custom">
+
+                            <option
+                                value="newest"
+                                {% if sort == 'newest' %}selected{% endif %}>
+                                Newest Postings
+                            </option>
+
+                            <option
+                                value="price_asc"
+                                {% if sort == 'price_asc' %}selected{% endif %}>
+                                Price: Low to High
+                            </option>
+
+                            <option
+                                value="price_desc"
+                                {% if sort == 'price_desc' %}selected{% endif %}>
+                                Price: High to Low
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- BUTTONS -->
+
+                    <div class="col-md-3 col-6 d-flex align-items-end gap-2">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary-custom w-100 py-3 fw-semibold">
+
+                            <i class="bi bi-funnel-fill me-1"></i>
+                            Apply
+
+                        </button>
+
+                        <a
+                            href="/marketplace"
+                            class="btn btn-outline-custom w-100 py-3 fw-semibold text-center small">
+
+                            <i class="bi bi-x-lg me-1"></i>
+                            Clear
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <!-- =====================================================
+             AVAILABLE PRODUCTS
+        ====================================================== -->
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <h3 class="fw-bold text-white mb-0">
+
+                <i class="bi bi-grid-fill text-primary me-2"></i>
+
+                Available Products
+
+            </h3>
+
+            <span class="text-muted small">
+                Showing {{ products|length }} listings
+            </span>
+
+        </div>
+
+
+        {% if products %}
+
+            <div class="row g-4">
+
+                {% for item in products %}
+
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+
+                        <div class="prod-card">
+
+
+                            <!-- IMAGE / ICON -->
+
+                            <div class="prod-img-box">
+
+                                <i
+                                    class="bi bi-box-seam"
+                                    style="
+                                        font-size:50px;
+                                        color:#403d65;
+                                    ">
+                                </i>
+
+                                <span
+                                    class="badge position-absolute bg-secondary small"
+                                    style="
+                                        top:12px;
+                                        left:12px;
+                                        font-size:10px;
+                                    ">
+
+                                    {{ item.item_condition }}
+
+                                </span>
+
+                            </div>
+
+
+                            <!-- PRODUCT CONTENT -->
+
+                            <div class="p-3 d-flex flex-column justify-content-between flex-grow-1">
+
+                                <div>
+
+                                    <!-- CATEGORY -->
+
+                                    <span
+                                        class="text-uppercase text-primary fw-bold"
+                                        style="
+                                            font-size:9px;
+                                            letter-spacing:0.8px;
+                                        ">
+
+                                        {{ item.category }}
+
+                                    </span>
+
+
+                                    <!-- TITLE -->
+
+                                    <h6
+                                        class="fw-bold text-white mt-1 mb-2 text-truncate"
+                                        title="{{ item.title }}">
+
+                                        <a
+                                            href="/item/{{ item.id }}"
+                                            class="text-white text-decoration-none hover-purple">
+
+                                            {{ item.title }}
+
+                                        </a>
+
+                                    </h6>
+
+
+                                    <!-- DESCRIPTION -->
+
+                                    <p
+                                        class="text-muted small mb-2 text-truncate">
+
+                                        {{ item.description }}
+
+                                    </p>
+
+
+                                    <!-- LOCATION + AGE -->
+
+                                    <div
+                                        class="d-flex justify-content-between text-muted"
+                                        style="
+                                            font-size:10px;
+                                            border-top:1px solid #252532;
+                                            padding-top:10px;
+                                            margin-top:10px;
+                                        ">
+
+                                        <span>
+
+                                            <i class="bi bi-geo-alt-fill text-primary me-1"></i>
+
+                                            {{ item.location }}
+
+                                        </span>
+
+                                        <span>
+
+                                            <i class="bi bi-calendar3 text-primary me-1"></i>
+
+                                            {{ item.item_age }} yr old
+
+                                        </span>
+
+                                    </div>
+
+
+                                    <!-- =================================================
+                                         SELLER INFORMATION
+                                    ================================================== -->
+
+                                    <div class="seller-box">
+
+                                        <div class="d-flex align-items-center gap-2 mb-2">
+
+                                            <div
+                                                class="brand-icon"
+                                                style="
+                                                    width:30px;
+                                                    height:30px;
+                                                    font-size:13px;
+                                                    background:rgba(113,87,255,0.12);
+                                                    color:#9b8cff;
+                                                ">
+
+                                                <i class="bi bi-person-fill"></i>
+
+                                            </div>
+
+                                            <div>
+
+                                                <div class="seller-name">
+
+                                                    {{ item.seller_name or 'Seller' }}
+
+                                                </div>
+
+                                                <div class="seller-contact">
+
+                                                    <i class="bi bi-telephone me-1"></i>
+
+                                                    {{ item.seller_contact or 'Contact unavailable' }}
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+
+                                        {% if item.seller_contact %}
+
+                                            {% set phone_clean = item.seller_contact
+                                                |replace('+', '')
+                                                |replace(' ', '')
+                                                |replace('-', '')
+                                                |replace('(', '')
+                                                |replace(')', '') %}
+
+
+                                            <div class="row g-2">
+
+                                                <!-- CALL -->
+
+                                                <div class="col-6">
+
+                                                    <a
+                                                        href="tel:{{ item.seller_contact }}"
+                                                        class="contact-btn call-btn w-100">
+
+                                                        <i class="bi bi-telephone-fill"></i>
+
+                                                        Call
+
+                                                    </a>
+
+                                                </div>
+
+
+                                                <!-- WHATSAPP -->
+
+                                                <div class="col-6">
+
+                                                    <a
+                                                        href="https://wa.me/{{ phone_clean }}"
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        class="contact-btn whatsapp-btn w-100">
+
+                                                        <i class="bi bi-whatsapp"></i>
+
+                                                        WhatsApp
+
+                                                    </a>
+
+                                                </div>
+
+                                            </div>
+
+                                        {% else %}
+
+                                            <div
+                                                class="text-muted text-center"
+                                                style="font-size:10px;">
+
+                                                Seller contact not available
+
+                                            </div>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- PRICE + DETAILS -->
+
+                                <div
+                                    class="d-flex justify-content-between align-items-center mt-3 pt-2"
+                                    style="border-top:1px solid #292936;">
+
+                                    <div>
+
+                                        <span
+                                            class="text-muted small d-block"
+                                            style="
+                                                font-size:8px;
+                                                text-transform:uppercase;
+                                            ">
+
+                                            Price
+
+                                        </span>
+
+                                        <strong class="text-white fs-5 fw-bold">
+                                        ₹{{ "%.2f"|format(item.price if item.price is defined and item.price is not none else item.selling_price|default(0)) }}
+                                            
+
+                                        </strong>
+
+                                    </div>
+
+
+                                    <a
+                                        href="/item/{{ item.id }}"
+                                        class="btn btn-primary-custom btn-sm py-2 px-3 fw-bold small">
+
+                                        Details
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <!-- EMPTY STATE -->
+
+            <div
+                class="p-5 rounded text-center"
+                style="
+                    background:#13131d;
+                    border:1px solid #292936;
+                ">
+
+                <div
+                    class="brand-icon mx-auto mb-3"
+                    style="
+                        width:60px;
+                        height:60px;
+                        font-size:24px;
+                        background:rgba(113,87,255,0.1);
+                        color:#9b8cff;
+                    ">
+
+                    <i class="bi bi-box-seam-fill"></i>
+
+                </div>
+
+                <h5 class="text-white fw-bold">
+                    No Items Found
+                </h5>
+
+                <p class="text-muted small mb-0">
+
+                    Try clearing your filters or widening your search tags.
+
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer>
+    SmartResale AI • AI-Powered Used Item Marketplace
+</footer>
+
+
+<!-- Bootstrap JS -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,1830 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Sell Item | SmartResale AI</title>
+
+
+    <!-- Bootstrap -->
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+
+    <!-- Bootstrap Icons -->
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+        rel="stylesheet">
+
+
+    <!-- Google Font -->
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+
+    <style>
+
+        /* =====================================================
+           GLOBAL
+        ===================================================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            font-family: "Inter", sans-serif;
+
+            background: #09090f;
+
+            color: #f4f4f7;
+
+        }
+
+
+        /* =====================================================
+           NAVBAR
+        ===================================================== */
+
+        .navbar {
+
+            background: rgba(9, 9, 15, 0.96);
+
+            backdrop-filter: blur(15px);
+
+            border-bottom: 1px solid #252532;
+
+            padding: 14px 0;
+
+        }
+
+
+        .navbar-brand {
+
+            color: white !important;
+
+            font-size: 20px;
+
+            font-weight: 800;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+        }
+
+
+        .brand-icon {
+
+            width: 38px;
+
+            height: 38px;
+
+            border-radius: 11px;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: #7157ff;
+
+            color: white;
+
+        }
+
+
+        .brand-ai {
+
+            color: #9b8cff;
+
+        }
+
+
+        .nav-link {
+
+            color: #a4a4b3 !important;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            margin-left: 12px;
+
+        }
+
+
+        .nav-link:hover {
+
+            color: #9b8cff !important;
+
+        }
+
+
+        /* =====================================================
+           PAGE
+        ===================================================== */
+
+        .page {
+
+            min-height: 100vh;
+
+            padding: 125px 20px 80px;
+
+            background:
+
+                radial-gradient(
+                    circle at 85% 5%,
+                    rgba(113, 87, 255, 0.17),
+                    transparent 30%
+                ),
+
+                radial-gradient(
+                    circle at 5% 70%,
+                    rgba(0, 170, 255, 0.07),
+                    transparent 28%
+                ),
+
+                #09090f;
+
+        }
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .page-header {
+
+            max-width: 720px;
+
+            margin: 0 auto 45px;
+
+            text-align: center;
+
+        }
+
+
+        .ai-badge {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            padding: 8px 15px;
+
+            border-radius: 50px;
+
+            background: rgba(113, 87, 255, 0.12);
+
+            border: 1px solid rgba(113, 87, 255, 0.25);
+
+            color: #a294ff;
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            letter-spacing: 1px;
+
+        }
+
+
+        .page-header h1 {
+
+            font-size: 44px;
+
+            font-weight: 800;
+
+            letter-spacing: -1px;
+
+            margin-top: 18px;
+
+        }
+
+
+        .page-header h1 span {
+
+            color: #8d7cff;
+
+        }
+
+
+        .page-header p {
+
+            color: #858594;
+
+            font-size: 14px;
+
+            line-height: 1.8;
+
+            margin-top: 13px;
+
+        }
+
+
+        /* =====================================================
+           MAIN CARD
+        ===================================================== */
+
+        .sell-card {
+
+            max-width: 960px;
+
+            margin: auto;
+
+            background: #13131d;
+
+            border: 1px solid #292936;
+
+            border-radius: 24px;
+
+            padding: 40px;
+
+            box-shadow:
+                0 30px 80px rgba(0, 0, 0, 0.40);
+
+        }
+
+
+        .card-title {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 14px;
+
+            margin-bottom: 32px;
+
+        }
+
+
+        .card-title-icon {
+
+            width: 50px;
+
+            height: 50px;
+
+            border-radius: 14px;
+
+            background: rgba(113, 87, 255, 0.13);
+
+            color: #9585ff;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 22px;
+
+        }
+
+
+        .card-title h3 {
+
+            margin: 0;
+
+            font-size: 20px;
+
+            font-weight: 800;
+
+        }
+
+
+        .card-title p {
+
+            margin: 5px 0 0;
+
+            color: #737383;
+
+            font-size: 12px;
+
+        }
+
+
+        /* =====================================================
+           FORM
+        ===================================================== */
+
+        .form-label {
+
+            color: #d9d9e2;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .form-label i {
+
+            color: #9b8cff;
+
+            margin-right: 5px;
+
+        }
+
+
+        .form-control,
+        .form-select {
+
+            background: #0d0d15 !important;
+
+            border: 1px solid #30303e !important;
+
+            color: #eeeeF4 !important;
+
+            border-radius: 11px;
+
+            padding: 13px 14px;
+
+            font-size: 13px;
+
+        }
+
+
+        .form-control::placeholder {
+
+            color: #60606e;
+
+        }
+
+
+        .form-control:focus,
+        .form-select:focus {
+
+            border-color: #7157ff !important;
+
+            box-shadow:
+                0 0 0 4px rgba(113, 87, 255, 0.11)
+                !important;
+
+        }
+
+
+        .form-select option {
+
+            background: #13131d;
+
+            color: white;
+
+        }
+
+
+        textarea.form-control {
+
+            min-height: 135px;
+
+            resize: vertical;
+
+        }
+
+
+        .hint {
+
+            color: #666675;
+
+            font-size: 10px;
+
+            margin-top: 6px;
+
+        }
+
+
+        /* =====================================================
+           AI BUTTON
+        ===================================================== */
+
+        .ai-button {
+
+            width: 100%;
+
+            border: none;
+
+            padding: 16px;
+
+            border-radius: 12px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7157ff,
+                    #8d7cff
+                );
+
+            color: white;
+
+            font-size: 14px;
+
+            font-weight: 800;
+
+            box-shadow:
+                0 14px 35px
+                rgba(113, 87, 255, 0.23);
+
+            transition: 0.2s;
+
+        }
+
+
+        .ai-button:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 18px 45px
+                rgba(113, 87, 255, 0.32);
+
+        }
+
+
+        /* =====================================================
+           RESULT
+        ===================================================== */
+
+        .result-wrapper {
+
+            margin-top: 45px;
+
+        }
+
+
+        .result-card {
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #1b1930,
+                    #11111a
+                );
+
+            border: 1px solid #393351;
+
+            border-radius: 22px;
+
+            padding: 35px;
+
+            text-align: center;
+
+        }
+
+
+        .result-label {
+
+            color: #a294ff;
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            letter-spacing: 1.6px;
+
+        }
+
+
+        .result-card h2 {
+
+            color: #9292a2;
+
+            font-size: 14px;
+
+            margin-top: 13px;
+
+        }
+
+
+        .final-price {
+
+            color: white;
+
+            font-size: 48px;
+
+            font-weight: 800;
+
+            margin-top: 5px;
+
+        }
+
+
+        .price-range {
+
+            display: inline-block;
+
+            padding: 8px 15px;
+
+            margin-top: 10px;
+
+            border-radius: 50px;
+
+            background: rgba(113, 87, 255, 0.12);
+
+            color: #a99cff;
+
+            font-size: 11px;
+
+        }
+
+
+        /* =====================================================
+           RESULT INFORMATION
+        ===================================================== */
+
+        .result-info {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 12px;
+
+            margin-top: 27px;
+
+        }
+
+
+        .info-box {
+
+            background: #0c0c13;
+
+            border: 1px solid #292936;
+
+            border-radius: 12px;
+
+            padding: 15px;
+
+        }
+
+
+        .info-box span {
+
+            display: block;
+
+            color: #6f6f80;
+
+            font-size: 9px;
+
+        }
+
+
+        .info-box strong {
+
+            display: block;
+
+            color: #e8e8ef;
+
+            font-size: 13px;
+
+            margin-top: 6px;
+
+        }
+
+
+        /* =====================================================
+           PUBLISH CARD
+        ===================================================== */
+
+        .publish-card {
+
+            margin-top: 22px;
+
+            padding: 28px;
+
+            background: #11111a;
+
+            border: 1px solid #292936;
+
+            border-radius: 18px;
+
+            text-align: left;
+
+        }
+
+
+        .publish-card h4 {
+
+            color: #eeeeF4;
+
+            font-size: 18px;
+
+            font-weight: 800;
+
+            margin-bottom: 5px;
+
+        }
+
+
+        .publish-card h4 i {
+
+            color: #9b8cff;
+
+        }
+
+
+        .publish-card > p {
+
+            color: #777787;
+
+            font-size: 12px;
+
+            margin-bottom: 23px;
+
+        }
+
+
+        .publish-button {
+
+            width: 100%;
+
+            border: none;
+
+            padding: 15px;
+
+            border-radius: 11px;
+
+            background: #20b878;
+
+            color: white;
+
+            font-size: 14px;
+
+            font-weight: 800;
+
+            transition: 0.2s;
+
+        }
+
+
+        .publish-button:hover {
+
+            background: #18a568;
+
+            transform: translateY(-1px);
+
+        }
+
+
+        /* =====================================================
+           INFO MESSAGE
+        ===================================================== */
+
+        .currency-note {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 12px 14px;
+
+            margin-top: 15px;
+
+            border-radius: 10px;
+
+            background: rgba(113, 87, 255, 0.07);
+
+            border: 1px solid rgba(113, 87, 255, 0.12);
+
+            color: #898899;
+
+            font-size: 10px;
+
+        }
+
+
+        .currency-note i {
+
+            color: #9b8cff;
+
+            font-size: 14px;
+
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        footer {
+
+            background: #07070c;
+
+            border-top: 1px solid #20202b;
+
+            color: #555563;
+
+            text-align: center;
+
+            padding: 25px;
+
+            font-size: 10px;
+
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 850px) {
+
+            .result-info {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .page {
+
+                padding-top: 105px;
+
+            }
+
+
+            .page-header h1 {
+
+                font-size: 32px;
+
+            }
+
+
+            .sell-card {
+
+                padding: 23px;
+
+            }
+
+
+            .final-price {
+
+                font-size: 38px;
+
+            }
+
+
+            .result-info {
+
+                grid-template-columns: 1fr;
+
+            }
+
+        }
+
+    </style>
+
+
+<style id="sell-final-dark-theme">
+html, body { background:#09090f !important; color:#f5f5f7 !important; }
+body { background-color:#09090f !important; }
+.navbar { background:#11101a !important; border-bottom:1px solid #292936 !important; }
+.navbar-brand, .navbar-brand span { color:#fff !important; }
+.nav-link { color:#b9b7c9 !important; }
+.nav-link:hover, .nav-link.active { color:#fff !important; }
+
+.sell-card, .form-card, .result-card, .publish-card, .card {
+    background:#13131d !important;
+    color:#f5f5f7 !important;
+    border-color:#292936 !important;
+}
+
+.form-control, .form-select, input, textarea, select {
+    background:#0d0d15 !important;
+    color:#f5f5f7 !important;
+    border-color:#30303e !important;
+}
+
+.form-control::placeholder, input::placeholder, textarea::placeholder {
+    color:#777787 !important;
+}
+
+.form-control:focus, .form-select:focus, input:focus,
+textarea:focus, select:focus {
+    background:#0d0d15 !important;
+    color:#fff !important;
+    border-color:#8d7cff !important;
+    box-shadow:0 0 0 3px rgba(141,124,255,.15) !important;
+}
+
+.form-label, label { color:#f5f5f7 !important; }
+.hint, .text-muted { color:#8c8cab !important; }
+
+.currency-note {
+    background:rgba(113,87,255,.08) !important;
+    color:#bdb9d5 !important;
+    border-color:rgba(113,87,255,.25) !important;
+}
+
+.ai-button, .publish-button {
+    background:#7157ff !important;
+    border-color:#7157ff !important;
+    color:#fff !important;
+}
+
+.ai-button:hover, .publish-button:hover {
+    background:#6048e8 !important;
+    border-color:#6048e8 !important;
+}
+
+.result-label, .price-range { color:#9b8cff !important; }
+.final-price { color:#fff !important; }
+
+.info-box {
+    background:#0d0d15 !important;
+    border-color:#292936 !important;
+}
+.info-box span { color:#8c8cab !important; }
+.info-box strong { color:#fff !important; }
+
+.input-group-text {
+    background:#0d0d15 !important;
+    color:#777787 !important;
+    border-color:#30303e !important;
+}
+
+footer { background:#09090f !important; color:#77778a !important; }
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<nav class="navbar fixed-top">
+
+    <div class="container">
+
+
+        <a
+            class="navbar-brand"
+            href="/">
+
+            <span class="brand-icon">
+
+                <i class="bi bi-recycle"></i>
+
+            </span>
+
+            SmartResale
+
+            <span class="brand-ai">
+                AI
+            </span>
+
+        </a>
+
+
+        <div class="ms-auto">
+
+            <a
+                href="/"
+                class="nav-link d-inline-block">
+
+                <i class="bi bi-house"></i>
+
+                Home
+
+            </a>
+
+
+            <a
+                href="/analyze"
+                class="nav-link d-inline-block">
+
+                <i class="bi bi-stars"></i>
+
+                Analyze Item
+
+            </a>
+
+
+            <a
+                href="/sell"
+                class="nav-link d-inline-block active">
+
+                <i class="bi bi-tag"></i>
+
+                Sell
+
+            </a>
+
+
+            <a
+                href="/marketplace"
+                class="nav-link d-inline-block">
+
+                <i class="bi bi-shop"></i>
+
+                Marketplace
+
+            </a>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =====================================================
+     PAGE
+===================================================== -->
+
+<section class="page">
+
+
+    <!-- =================================================
+         HEADER
+    ================================================== -->
+
+    <div class="page-header">
+
+
+        <div class="ai-badge">
+
+            <i class="bi bi-stars"></i>
+
+            AI-POWERED RESALE VALUATION
+
+        </div>
+
+
+        <h1>
+
+            Sell smarter.
+
+            <span>
+                Get the right value.
+            </span>
+
+        </h1>
+
+
+        <p>
+
+            Enter your item's details, original purchase
+            price, age and current condition. SmartResale AI
+            combines machine learning with intelligent
+            depreciation analysis to estimate a practical
+            resale value.
+
+        </p>
+
+    </div>
+
+
+
+    <!-- =================================================
+         SELL CARD
+    ================================================== -->
+
+    <div class="sell-card">
+
+
+        <div class="card-title">
+
+
+            <div class="card-title-icon">
+
+                <i class="bi bi-box-seam"></i>
+
+            </div>
+
+
+            <div>
+
+                <h3>
+                    Item Information
+                </h3>
+
+                <p>
+                    Provide accurate details for a better valuation.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             AI PREDICTION FORM
+        ================================================== -->
+
+        <form
+            action="/predict"
+            method="POST">
+
+
+            <div class="row g-4">
+
+
+                <!-- CATEGORY -->
+
+                <div class="col-md-6">
+
+
+                    <label class="form-label">
+
+                        <i class="bi bi-grid"></i>
+
+                        Category
+
+                    </label>
+
+
+                    <select
+                        name="categoryName"
+                        class="form-select"
+                        required>
+
+
+                        <option value="">
+                            Select category
+                        </option>
+
+
+                        <option value="Furniture & Home Decor">
+                            Furniture & Home Decor
+                        </option>
+
+
+                        <option value="Electronics">
+                            Electronics
+                        </option>
+
+
+                        <option value="Home Appliances">
+                            Home Appliances
+                        </option>
+
+
+                        <option value="Kitchen">
+                            Kitchen
+                        </option>
+
+
+                        <option value="Kids">
+                            Kids
+                        </option>
+
+
+                        <option value="Books, Sports & Hobbies">
+                            Books, Sports & Hobbies
+                        </option>
+
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- LOCATION -->
+
+                <div class="col-md-6">
+
+
+                    <label class="form-label">
+
+                        <i class="bi bi-geo-alt"></i>
+
+                        Location
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        name="location"
+                        class="form-control"
+                        placeholder="e.g. Vijayawada"
+                        required>
+
+                </div>
+
+
+
+                <!-- BRAND -->
+
+                <div class="col-md-6">
+
+
+                    <label class="form-label">
+
+                        <i class="bi bi-award"></i>
+
+                        Brand
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        name="brand"
+                        class="form-control"
+                        placeholder="e.g. Godrej, Samsung"
+                        required>
+
+                </div>
+
+
+
+                <!-- CONDITION -->
+
+                <div class="col-md-6">
+
+
+                    <label class="form-label">
+
+                        <i class="bi bi-shield-check"></i>
+
+                        Current Condition
+
+                    </label>
+
+
+                    <select
+                        name="condition"
+                        class="form-select"
+                        required>
+
+
+                        <option value="">
+                            Select condition
+                        </option>
+
+
+                        <option value="New">
+                            New
+                        </option>
+
+
+                        <option value="Like New">
+                            Like New
+                        </option>
+
+
+                        <option value="Good">
+                            Good
+                        </option>
+
+
+                        <option value="Fair">
+                            Fair
+                        </option>
+
+
+                        <option value="Used">
+                            Used
+                        </option>
+
+
+                        <option value="Poor">
+                            Poor
+                        </option>
+
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- ORIGINAL PURCHASE PRICE -->
+
+                <div class="col-md-6">
+
+
+                    <label class="form-label">
+
+                        <i class="bi bi-cash-stack"></i>
+
+                        Original Purchase Price (₹)
+
+                    </label>
+
+
+                    <input
+                        type="number"
+                        name="original_price"
+                        class="form-control"
+                        placeholder="e.g. 20000"
+                        min="1"
+                        step="0.01"
+                        required>
+
+
+                    <div class="hint">
+
+                        Enter the amount you originally paid
+                        for the item.
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ITEM AGE -->
+
+                <div class="col-md-6">
+
+
+                    <label class="form-label">
+
+                        <i class="bi bi-calendar3"></i>
+
+                        Item Age
+
+                    </label>
+
+
+                    <div class="input-group">
+
+
+                        <input
+                            type="number"
+                            name="age"
+                            class="form-control"
+                            placeholder="e.g. 3"
+                            min="0"
+                            max="50"
+                            required>
+
+
+                        <span
+                            class="input-group-text"
+                            style="
+                                background:#0d0d15;
+                                border:1px solid #30303e;
+                                color:#777787;
+                            ">
+
+                            years
+
+                        </span>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- TITLE -->
+
+                <div class="col-12">
+
+
+                    <label class="form-label">
+
+                        <i class="bi bi-pencil-square"></i>
+
+                        Item Title
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        name="title"
+                        class="form-control"
+                        placeholder="e.g. Godrej Wooden Study Table"
+                        maxlength="150"
+                        required>
+
+                </div>
+
+
+
+                <!-- DESCRIPTION -->
+
+                <div class="col-12">
+
+
+                    <label class="form-label">
+
+                        <i class="bi bi-card-text"></i>
+
+                        Description
+
+                    </label>
+
+
+                    <textarea
+                        name="description"
+                        class="form-control"
+                        rows="5"
+                        maxlength="1000"
+                        placeholder="Describe the item, features, condition, defects, accessories, etc."
+                        required></textarea>
+
+
+                    <div class="hint">
+
+                        A detailed description can help you
+                        create a better listing.
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- CURRENCY INFORMATION -->
+
+                <div class="col-12">
+
+
+                    <div class="currency-note">
+
+                        <i class="bi bi-info-circle"></i>
+
+                        All prices shown to sellers are in
+                        Indian Rupees (₹).
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- AI BUTTON -->
+
+                <div class="col-12">
+
+
+                    <button
+                        type="submit"
+                        class="ai-button">
+
+
+                        <span>
+
+                            <i class="bi bi-stars"></i>
+
+                            Get AI Resale Valuation
+
+                        </span>
+
+
+                        <i class="bi bi-arrow-right"></i>
+
+
+                    </button>
+
+                </div>
+
+
+            </div>
+
+        </form>
+
+
+
+        <!-- =================================================
+             AI RESULT
+        ================================================== -->
+
+       {% if prediction is defined and prediction is not none %}
+
+
+        <div class="result-wrapper">
+
+
+            <div class="result-card">
+
+
+                <div class="result-label">
+
+                    AI HYBRID VALUATION
+
+                </div>
+
+
+                <h2>
+
+                    Estimated Resale Value
+
+                </h2>
+
+
+                <div class="final-price">
+
+                    ₹{{ "{:,.2f}".format(prediction) }}
+
+                </div>
+
+
+                <div class="price-range">
+
+                    Suggested Selling Range:
+
+                    ₹{{ "{:,.2f}".format(lower_price) }}
+
+                    –
+
+                    ₹{{ "{:,.2f}".format(upper_price) }}
+
+                </div>
+
+
+
+                <!-- =================================================
+                     RESULT DETAILS
+                ================================================== -->
+
+                <div class="result-info">
+
+
+                    <!-- ML -->
+
+                    <div class="info-box">
+
+                        <span>
+
+                            ML Market Estimate
+
+                        </span>
+
+
+                        <strong>
+
+                            ₹{{ "{:,.2f}".format(ml_price) }}
+
+                        </strong>
+
+                    </div>
+
+
+
+                    <!-- ORIGINAL -->
+
+                    <div class="info-box">
+
+                        <span>
+
+                            Original Purchase Price
+
+                        </span>
+
+
+                        <strong>
+
+                            ₹{{ "{:,.2f}".format(original_price) }}
+
+                        </strong>
+
+                    </div>
+
+
+
+                    <!-- AGE -->
+
+                    <div class="info-box">
+
+                        <span>
+
+                            Item Age
+
+                        </span>
+
+
+                        <strong>
+
+                            {{ age }} years
+
+                        </strong>
+
+                    </div>
+
+
+
+                    <!-- CONDITION -->
+
+                    <div class="info-box">
+
+                        <span>
+
+                            Condition
+
+                        </span>
+
+
+                        <strong>
+
+                            {{ condition }}
+
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- =================================================
+                     PUBLISH ITEM
+                ================================================== -->
+
+                <div class="publish-card">
+
+
+                    <h4>
+
+                        <i class="bi bi-megaphone"></i>
+
+                        Publish Your Listing
+
+                    </h4>
+
+
+                    <p>
+
+                        Your item will be added to the
+                        SmartResale marketplace so buyers
+                        can discover it.
+
+                    </p>
+
+
+
+                    <!-- =============================================
+                         PUBLISH FORM
+                    ============================================== -->
+
+                    <form
+                        action="/publish"
+                        method="POST">
+
+
+                        <!-- =============================================
+                             HIDDEN ITEM INFORMATION
+                        ============================================== -->
+
+
+                        <input
+                            type="hidden"
+                            name="title"
+                            value="{{ title }}">
+
+
+                        <input
+                            type="hidden"
+                            name="category"
+                            value="{{ category }}">
+
+
+                        <input
+                            type="hidden"
+                            name="brand"
+                            value="{{ brand }}">
+
+
+                        <input
+                            type="hidden"
+                            name="condition"
+                            value="{{ condition }}">
+
+
+                        <input
+                            type="hidden"
+                            name="description"
+                            value="{{ description }}">
+
+
+                        <input
+                            type="hidden"
+                            name="location"
+                            value="{{ location }}">
+
+
+
+                        <!-- =============================================
+                             IMPORTANT:
+                             These two fields are needed by MySQL
+                        ============================================== -->
+
+
+                        <input
+                            type="hidden"
+                            name="original_price"
+                            value="{{ original_price }}">
+
+
+                        <input
+                            type="hidden"
+                            name="age"
+                            value="{{ age }}">
+
+
+                        <!-- AI PREDICTED PRICE -->
+
+                        <input
+                            type="hidden"
+                            name="predicted_price"
+                            value="{{ prediction }}">
+
+
+
+                        <!-- =============================================
+                             SELLING PRICE
+                        ============================================== -->
+
+                        <div class="mb-3">
+
+
+                            <label class="form-label">
+
+                                <i class="bi bi-tag"></i>
+
+                                Your Selling Price (₹)
+
+                            </label>
+
+
+                            <input
+                                type="number"
+                                name="price"
+                                class="form-control"
+                                value="{{ prediction }}"
+                                max="{{ prediction }}"
+                                min="1"
+                                step="0.01"
+                                required>
+
+
+                            <div class="hint">
+
+                                You can adjust the price before
+                                publishing your item.
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- =============================================
+                             SELLER NAME
+                        ============================================== -->
+
+                        <div class="mb-3">
+
+
+                            <label class="form-label">
+
+                                <i class="bi bi-person"></i>
+
+                                Your Name
+
+                            </label>
+
+
+                            <input
+                                type="text"
+                                name="seller_name"
+                                class="form-control"
+                                placeholder="Enter your name"
+                                maxlength="100"
+                                required>
+
+                        </div>
+
+
+
+                        <!-- =============================================
+                             SELLER CONTACT
+                        ============================================== -->
+
+                        <div class="mb-3">
+
+
+                            <label class="form-label">
+
+                                <i class="bi bi-telephone"></i>
+
+                                Contact Number
+
+                            </label>
+
+
+                            <input
+                                type="tel"
+                                name="seller_contact"
+                                class="form-control"
+                                placeholder="Enter your contact number"
+                                maxlength="30"
+                                required>
+
+                        </div>
+
+
+
+                        <!-- =============================================
+                             PUBLISH BUTTON
+                        ============================================== -->
+
+                        <button
+                            type="submit"
+                            class="publish-button">
+
+
+                            <i class="bi bi-cloud-arrow-up"></i>
+
+                            Publish Item
+
+
+                        </button>
+
+
+                    </form>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+    SmartResale AI
+
+    •
+
+    AI-Powered Used Item Marketplace
+
+</footer>
+
+
+
+</body>
+
+</html>
