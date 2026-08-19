@@ -8,13 +8,15 @@ app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', 'smartresale_secret_key_2026')
 
 # Cloud MySQL Database Helper Function (Aiven Configuration)
+# Cloud MySQL Database Helper Function (Aiven Configuration with SSL disabled for connection stability)
 def get_db_connection():
     return mysql.connector.connect(
         host=os.getenv("DB_HOST", "mysql-183e7433-lakshmanchitikina123-a18e.f.aivencloud.com"),
         user=os.getenv("DB_USER", "avnadmin"),
         password=os.getenv("DB_PASSWORD", "AVNS_nZ_JCEfem70FTj1L-Pq"),
         database=os.getenv("DB_NAME", "defaultdb"),
-        port=int(os.getenv("DB_PORT", 18035))
+        port=int(os.getenv("DB_PORT", 18035)),
+        ssl_disabled=True
     )
 
 # Automatically initialize MySQL table on startup
