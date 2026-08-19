@@ -43,6 +43,7 @@ def init_db():
             )
         ''')
         conn.commit()
+        print("Database initialized successfully.")
     except Exception as e:
         print(f"Database Initialization Error: {e}")
     finally:
@@ -54,13 +55,17 @@ def init_db():
 # Run database initialization
 init_db()
 
-# Load ML model if available
-try:
-    with open('model.pkl', 'rb') as f:
-        model = pickle.load(f)
-except Exception as e:
-    model = None
-    print(f"Model loading warning: {e}")
+# Load ML model (Tries both 'model.pkl' and 'olx_price_prediction_model.pkl')
+model = None
+for model_path in ['olx_price_prediction_model.pkl', 'model.pkl']:
+    try:
+        if os.path.exists(model_path):
+            with open(model_path, 'rb') as f:
+                model = pickle.load(f)
+                print(f"Loaded ML model from {model_path}")
+                break
+    except Exception as e:
+        print(f"Model loading warning ({model_path}): {e}")
 
 # 1. Home Route
 @app.route('/')
@@ -155,16 +160,22 @@ def marketplace():
 @app.route('/analyze', methods=['GET', 'POST'])
 def analyze():
     if request.method == 'POST':
-        category_name = request.form.get('categoryName', '')
+        category_name = request.form.get('categoryName', '') or request.form.get('category', '')
         location = request.form.get('location', '')
         brand = request.form.get('brand', '')
         condition = request.form.get('condition', '')
-        title = request.form.get('title', '')
         description = request.form.get('description', '')
         image_url = request.form.get('image_url', '')
         seller_name = request.form.get('seller_name', '')
         seller_contact = request.form.get('seller_contact', '')
         
+        # Ensure title is never empty for database insertion
+        raw_title = request.form.get('title', '').strip()
+        if not raw_title:
+            title = f"{brand} {category_name}".strip() or "Pre-owned Item"
+        else:
+            title = raw_title
+
         try:
             original_price = float(request.form.get('original_price', 0))
         except ValueError:
@@ -192,8 +203,8 @@ def analyze():
         min_price = round(predicted_price * 0.90, 2)
         max_price = round(predicted_price * 1.10, 2)
 
-        # Saves listing when clicking "Post to Marketplace"
-        if request.form.get('save_item'):
+        # Saves listing when clicking "Post to Marketplace" or submitting form
+        if request.form.get('save_item') or request.form.get('action') == 'save':
             conn = None
             cursor = None
             try:
