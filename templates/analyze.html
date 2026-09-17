@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartResale - Precision Valuation Engine</title>
+    
+    <!-- Bootstrap & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            <span class="brand-icon"><i class="bi bi-recycle"></i></span>
+            SmartResale
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <i class="bi bi-list"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="bi bi-house me-1"></i> Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/analyze"><i class="bi bi-stars me-1"></i> Analyze Item</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/sell"><i class="bi bi-tag me-1"></i> Sell</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/marketplace"><i class="bi bi-shop me-1"></i> Marketplace</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container analyze-section" style="padding-top: 130px;">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            
+            <div class="analyzer-card">
+                <div class="analyzer-header">
+                    <div class="analyzer-title">
+                        <div class="analyzer-icon">
+                            <i class="bi bi-cpu"></i>
+                        </div>
+                        <div>
+                            <h4>High-Precision Valuation Engine</h4>
+                            <p>Calculate realistic resale value tuned by category depreciation curves & brand equity</p>
+                        </div>
+                    </div>
+                    <span class="step-badge"><i class="bi bi-shield-check text-success me-1"></i> ALGORITHM V2.6 ACTIVE</span>
+                </div>
+
+                <!-- FLASH MESSAGES -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show mb-4 border-0 rounded-4 shadow-sm" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form method="POST" action="/analyze" id="valuationForm" enctype="multipart/form-data">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="bi bi-grid-3x3-gap"></i> Category</label>
+                            <select name="categoryName" id="categoryName" class="form-select form-control-custom" required>
+                                <option value="" disabled {% if not categoryName %}selected{% endif %}>Select category</option>
+                                {% for cat in ['Vehicles', 'Electronics', 'Home Appliances', 'Furniture & Home Decor', 'Books, Sports & Hobbies', 'Other'] %}
+                                    <option value="{{ cat }}" {% if categoryName is defined and categoryName == cat %}selected{% elif cat == 'Vehicles' and not categoryName %}selected{% endif %}>{{ cat }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="bi bi-geo-alt"></i> Location</label>
+                            <input type="text" name="location" class="form-control-custom" placeholder="e.g. Bangalore, Mumbai, Delhi NCR" value="{{ location if location is defined else '' }}" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="bi bi-building"></i> Brand / Manufacturer</label>
+                            <input type="text" name="brand" id="brandInput" list="verifiedBrandsList" class="form-control-custom" placeholder="e.g. Toyota, Maruti Suzuki, Hyundai, Apple, Samsung..." value="{{ brand if brand is defined else '' }}" autocomplete="off" required>
+                            <datalist id="verifiedBrandsList">
+                                <!-- Vehicles -->
+                                <option value="Toyota">
+                                <option value="Maruti Suzuki">
+                                <option value="Hyundai">
+                                <option value="Kia">
+                                <option value="Honda">
+                                <option value="Mahindra">
+                                <option value="Tata Motors">
+                                <option value="Royal Enfield">
+                                <option value="Volkswagen">
+                                <option value="Skoda">
+                                <option value="BMW">
+                                <option value="Mercedes-Benz">
+                                <option value="Audi">
+                                <option value="TVS">
+                                <option value="Bajaj">
+                                <option value="Yamaha">
+                                <option value="Hero MotoCorp">
+                                <!-- Tech -->
+                                <option value="Apple">
+                                <option value="Samsung">
+                                <option value="Sony">
+                                <option value="Dell">
+                                <option value="HP">
+                                <option value="Lenovo">
+                                <option value="OnePlus">
+                                <!-- Appliances -->
+                                <option value="LG">
+                                <option value="Whirlpool">
+                                <option value="Bosch">
+                                <option value="IFB">
+                                <option value="Voltas">
+                                <option value="Daikin">
+                                <!-- Furniture -->
+                                <option value="IKEA">
+                                <option value="Pepperfry">
+                                <option value="Wakefit">
+                            </datalist>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="bi bi-patch-check"></i> Condition</label>
+                            <select name="condition" id="conditionSelect" class="form-select form-control-custom" required>
+                                <option value="" disabled>Select condition</option>
+                                {% for cond in ['New', 'Like New', 'Good', 'Fair', 'Used', 'Poor'] %}
+                                    <option value="{{ cond }}" {% if condition is defined and condition == cond %}selected{% elif cond == 'Good' and not condition %}selected{% endif %}>{{ cond }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label"><i class="bi bi-card-heading"></i> Item Title</label>
+                            <input type="text" name="title" class="form-control-custom" placeholder="e.g. 2021 Hyundai Creta SX (O) Turbo / iPhone 15 Pro Max" value="{{ title if title is defined else '' }}" required>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label"><i class="bi bi-text-paragraph"></i> Item Description</label>
+                            <textarea name="description" class="form-control-custom textarea-custom" rows="3" placeholder="Provide details like wear, accessories, service history, bill/box...">{{ description if description is defined else '' }}</textarea>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="bi bi-currency-rupee"></i> Original Purchase Price (₹)</label>
+                            <input type="number" step="0.01" name="original_price" id="originalPrice" class="form-control-custom" placeholder="e.g. 1400000" value="{{ original_price if original_price is defined and original_price else '' }}" required>
+                            <div class="mt-1" style="color: #cbd5e1; font-size: 12px; font-weight: 500;">
+                                <i class="bi bi-info-circle text-info me-1"></i>The original invoice purchase price when bought new.
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="bi bi-calendar3"></i> Item Age (Months)</label>
+                            <input type="number" name="age" id="ageInput" class="form-control-custom" placeholder="e.g. 36 (3 years) or 84 (7 years)" value="{{ age if age is defined and age else '' }}" required>
+                            <div class="d-flex gap-2 mt-2 flex-wrap">
+                                <button type="button" class="age-chip-btn {% if age == 6 %}active{% endif %}" onclick="setAge(6, this)">6 Mo</button>
+                                <button type="button" class="age-chip-btn {% if age == 12 %}active{% endif %}" onclick="setAge(12, this)">1 Yr</button>
+                                <button type="button" class="age-chip-btn {% if age == 24 %}active{% endif %}" onclick="setAge(24, this)">2 Yrs</button>
+                                <button type="button" class="age-chip-btn {% if age == 36 %}active{% endif %}" onclick="setAge(36, this)">3 Yrs</button>
+                                <button type="button" class="age-chip-btn {% if age == 60 %}active{% endif %}" onclick="setAge(60, this)">5 Yrs</button>
+                                <button type="button" class="age-chip-btn {% if age == 84 %}active{% endif %}" onclick="setAge(84, this)">7 Yrs</button>
+                            </div>
+                        </div>
+
+                        <!-- UNIFIED IN-PLACE GALLERY PHOTO UPLOADER -->
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+                                <label class="form-label mb-0" style="font-size: 16px; font-weight: 800; color: #ffffff;">
+                                    <i class="bi bi-camera-fill text-cyan"></i> Item Photo
+                                    <span class="badge bg-secondary bg-opacity-75 text-light ms-2 px-2 py-1" style="font-size: 11px; font-weight: 700;">Optional</span>
+                                </label>
+                                
+                                <!-- Mode Switcher Tabs -->
+                                <div class="media-mode-tabs mb-0">
+                                    <button type="button" class="media-tab-btn active" id="tabGalleryBtn" onclick="switchMediaMode('gallery')">
+                                        <i class="bi bi-phone"></i> Gallery / Device
+                                    </button>
+                                    <button type="button" class="media-tab-btn" id="tabUrlBtn" onclick="switchMediaMode('url')">
+                                        <i class="bi bi-link-45deg"></i> Web Link
+                                    </button>
+                                </div>
+                            </div>
+                            <p class="mb-3" style="color: #cbd5e1; font-size: 13px; font-weight: 500;">
+                                Adding a genuine photo from your gallery increases buyer inquiries by up to 3x!
+                            </p>
+
+                            <!-- Hidden Actual File Input for Gallery / Device Upload -->
+                            <input type="file" name="image_file" id="imageFileInput" accept=".jpg,.jpeg,.png,.webp,.gif,image/*" style="display: none;">
+
+                            <!-- SINGLE UNIFIED IN-PLACE CONTAINER (Fixed in this place only!) -->
+                            <div id="unifiedPhotoCard" class="unified-photo-zone">
+                                
+                                <!-- STATE A: EMPTY PROMPT (Shown when no photo attached) -->
+                                <div id="dropzonePrompt" class="text-center py-4 px-3" onclick="triggerFileInput()" style="{% if image_url %}display: none;{% else %}display: block;{% endif %} cursor: pointer;">
+                                    <div class="dropzone-icon-box mb-3">
+                                        <i class="bi bi-cloud-arrow-up-fill"></i>
+                                    </div>
+                                    <h5 class="fw-bold text-white mb-2" style="font-family: 'Outfit', sans-serif; font-size: 20px;">
+                                        Choose Photo from Gallery or Files
+                                    </h5>
+                                    <p class="mb-3" style="color: #cbd5e1; font-size: 14px; max-width: 500px; margin: 0 auto;">
+                                        Tap here to select from your phone/computer gallery, or drag and drop your photo right here
+                                    </p>
+                                    <div class="d-flex justify-content-center gap-2 flex-wrap">
+                                        <span class="format-pill"><i class="bi bi-check2 text-success"></i> JPG, PNG, WEBP</span>
+                                        <span class="format-pill"><i class="bi bi-camera text-info"></i> Phone Gallery / Files</span>
+                                        <span class="format-pill"><i class="bi bi-shield-check text-warning"></i> Auto-Optimized</span>
+                                    </div>
+                                </div>
+
+                                <!-- STATE B: IN-PLACE PREVIEW (Replaces prompt inside the exact same container) -->
+                                <div id="dropzonePreview" class="p-3 text-center" style="{% if image_url %}display: block;{% else %}display: none;{% endif %}">
+                                    <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2 px-2">
+                                        <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 px-3 py-2 rounded-pill fw-bold" id="previewStatus">
+                                            <i class="bi bi-check-circle-fill me-1"></i> Photo Attached & Verified
+                                        </span>
+                                        <div class="d-flex gap-2">
+                                            <button type="button" class="btn btn-sm btn-outline-light rounded-pill px-3 py-1 fw-bold shadow-sm" onclick="triggerFileInput()">
+                                                <i class="bi bi-arrow-repeat me-1"></i> Change Photo
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-danger rounded-pill px-3 py-1 fw-bold shadow-sm" onclick="clearImagePreview()">
+                                                <i class="bi bi-trash3 me-1"></i> Remove
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="preview-img-wrapper position-relative mx-auto rounded-4 overflow-hidden shadow-lg" style="max-height: 280px; max-width: 100%; display: inline-block;">
+                                        <img src="{{ image_url if image_url is defined else '' }}" id="liveImg" alt="Preview" class="img-fluid rounded-4" style="max-height: 280px; width: auto; object-fit: contain; background: rgba(0,0,0,0.5);" onerror="handleImgError()">
+                                    </div>
+
+                                    <div id="fileMetaInfo" class="mt-2 text-center" style="color: #e2e8f0; font-size: 13px;">
+                                        {% if image_url %}
+                                            <span class="text-white fw-bold"><i class="bi bi-image text-cyan me-1"></i>Attached Photo</span>
+                                        {% endif %}
+                                    </div>
+
+                                    <div id="imgErrorMsg" class="alert alert-warning border-0 rounded-3 mt-3 py-2 text-start small mb-0" style="display: none; background: rgba(245, 158, 11, 0.2); color: #fef08a;">
+                                        <i class="bi bi-exclamation-triangle-fill me-1"></i> Image preview could not be loaded. You can pick another photo from your gallery.
+                                    </div>
+                                </div>
+
+                                <!-- MODE 2: WEB URL INPUT (Shown inside container only when Web Link tab is clicked) -->
+                                <div id="urlUploadPane" class="p-4" style="display: none;">
+                                    <label class="form-label text-white fw-bold mb-2">Direct Image Link (URL)</label>
+                                    <div class="input-group mb-2">
+                                        <span class="input-group-text bg-dark border-secondary text-info">
+                                            <i class="bi bi-link-45deg fs-5"></i>
+                                        </span>
+                                        <input type="text" name="image_url" id="imageUrlInput" class="form-control-custom rounded-start-0" placeholder="Paste direct image link here (e.g. https://images.unsplash.com/...)" value="{{ image_url if image_url is defined else '' }}" style="color: #ffffff !important; font-weight: 500;">
+                                    </div>
+                                    <p class="mb-0" style="color: #cbd5e1; font-size: 12px;">
+                                        Tip: You can paste any direct web image link (.jpg, .png, etc.)
+                                    </p>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- SELLER INFORMATION FIELDS -->
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="bi bi-person"></i> Your Name (Seller)</label>
+                            <input type="text" name="seller_name" class="form-control-custom" placeholder="e.g. Alex Johnson" value="{{ seller_name if seller_name is defined else '' }}" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="bi bi-telephone"></i> Phone / WhatsApp Number</label>
+                            <input type="tel" name="seller_contact" class="form-control-custom" placeholder="e.g. +91 98765 43210" value="{{ seller_contact if seller_contact is defined else '' }}" required>
+                        </div>
+
+                        <!-- SUBMIT BUTTON -->
+                        <div class="col-12 text-center mt-4">
+                            <button type="submit" class="btn-primary-custom btn-shimmer w-100 py-3 fs-5 justify-content-center shadow-lg">
+                                <span><i class="bi bi-magic me-2"></i>Compute Precision Valuation</span>
+                                <i class="bi bi-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Valuation Results / Error Section -->
+                {% if error_message %}
+                <div class="result-section mt-4" id="valuationResult">
+                    <div class="result-card text-center py-5 px-4" style="border: 2px solid rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.06); border-radius: 24px;">
+                        <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3 shadow-sm" style="width: 76px; height: 76px; background: rgba(239, 68, 68, 0.15); border: 2px solid rgba(239, 68, 68, 0.4);">
+                            <i class="bi bi-exclamation-octagon text-danger" style="font-size: 38px;"></i>
+                        </div>
+                        <h3 class="fw-bold text-danger mb-3" style="font-size: 24px;">Price Cannot Be Predicted</h3>
+                        <div class="alert alert-danger d-inline-block text-start border-0 rounded-4 py-3 px-4 mb-3 shadow-sm" style="max-width: 650px; background: rgba(239, 68, 68, 0.18); font-size: 16px; line-height: 1.6; color: #fff;">
+                            <i class="bi bi-exclamation-triangle-fill me-2 text-danger"></i>
+                            <strong>Notice:</strong> {{ error_message }}
+                        </div>
+                        
+                        {% if suggested_brand %}
+                        <div class="my-3">
+                            <button type="button" class="btn suggestion-btn rounded-pill px-4 py-3 fw-bold shadow-lg fs-6" onclick="applySuggestedBrand('{{ suggested_brand }}')">
+                                <i class="bi bi-stars me-2"></i> Did you mean '{{ suggested_brand }}'? Click to Auto-Fill & Calculate Now &rarr;
+                            </button>
+                        </div>
+                        {% endif %}
+
+                        <div>
+                            <a href="#valuationForm" class="btn btn-outline-light rounded-pill px-4 py-2" onclick="document.getElementById('brandInput').focus();">
+                                <i class="bi bi-arrow-up-circle me-1"></i> Correct Category / Brand
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% elif can_predict and predicted_price is defined and predicted_price %}
+                <div class="result-section" id="valuationResult">
+                    <div class="result-card">
+                        <!-- Image Preview in Result Card if provided -->
+                        {% if image_url %}
+                        <div class="text-center mb-4">
+                            <img src="{{ image_url }}" alt="{{ title }}" class="rounded-4 shadow" referrerpolicy="no-referrer" style="max-height: 220px; max-width: 100%; object-fit: cover;">
+                        </div>
+                        {% endif %}
+
+                        <!-- Price Highlight (Starts directly with predicted price - No clutter!) -->
+                        <div class="price-result">
+                            <span>Recommended Listing Price</span>
+                            <strong>₹{{ "{:,.2f}".format(predicted_price) }}</strong>
+                            <div class="text-info mt-1" style="font-size: 14px; font-weight: 700;">
+                                <i class="bi bi-graph-up-arrow me-1"></i> {{ retention_pct }}% of Original Purchase Value Retained
+                            </div>
+                        </div>
+
+                        <!-- Retention & Depreciation Metrics -->
+                        <div class="retention-meter">
+                            <div>
+                                <span class="text-muted" style="font-size: 12px; text-transform: uppercase;">Value Retained</span>
+                                <div class="text-success fw-bold fs-5">{{ retention_pct }}%</div>
+                            </div>
+                            <div class="text-center">
+                                <span class="text-muted" style="font-size: 12px; text-transform: uppercase;">Total Depreciation</span>
+                                <div class="text-danger fw-bold fs-5">{{ depreciation_pct }}%</div>
+                            </div>
+                            <div class="text-end">
+                                <span class="text-muted" style="font-size: 12px; text-transform: uppercase;">Confidence</span>
+                                <div class="text-info fw-bold fs-5">{{ confidence }}% High</div>
+                            </div>
+                        </div>
+
+                        <!-- Price Range Bar -->
+                        <div class="price-range-bar-container">
+                            <div class="price-range-labels">
+                                <span>Min Acceptable: <strong>₹{{ "{:,.2f}".format(min_price) }}</strong></span>
+                                <span class="text-info fw-bold"><i class="bi bi-dot"></i> Fair Market Target</span>
+                                <span>Max Listing: <strong>₹{{ "{:,.2f}".format(max_price) }}</strong></span>
+                            </div>
+                            <div class="price-range-track">
+                                <div class="price-range-fill"></div>
+                            </div>
+                        </div>
+
+                        <!-- Details Grid -->
+                        <div class="result-details">
+                            <div class="detail-item">
+                                <span>Category</span>
+                                <strong>{{ categoryName }}</strong>
+                            </div>
+                            <div class="detail-item">
+                                <span>Brand</span>
+                                <strong class="text-success">{{ detected_brand or brand }} <span class="badge bg-success bg-opacity-25 text-success ms-1"><i class="bi bi-patch-check-fill me-1"></i>Verified</span></strong>
+                            </div>
+                            <div class="detail-item">
+                                <span>Condition</span>
+                                <strong>{{ condition }}</strong>
+                            </div>
+                            <div class="detail-item">
+                                <span>Original Price</span>
+                                <strong>₹{{ "{:,.2f}".format(original_price) }}</strong>
+                            </div>
+                            <div class="detail-item">
+                                <span>Market Dynamics</span>
+                                <strong class="text-info">{{ outside_market_trend or 'Active' }}</strong>
+                            </div>
+                            <div class="detail-item">
+                                <span>Age</span>
+                                <strong>{{ age }} Months</strong>
+                            </div>
+                        </div>
+
+                        <!-- Post Item Form -->
+                        <div class="mt-4 pt-3">
+                            <form method="POST" action="/analyze">
+                                <input type="hidden" name="title" value="{{ title }}">
+                                <input type="hidden" name="categoryName" value="{{ categoryName }}">
+                                <input type="hidden" name="brand" value="{{ brand }}">
+                                <input type="hidden" name="condition" value="{{ condition }}">
+                                <input type="hidden" name="location" value="{{ location }}">
+                                <input type="hidden" name="description" value="{{ description }}">
+                                <input type="hidden" name="original_price" value="{{ original_price }}">
+                                <input type="hidden" name="age" value="{{ age }}">
+                                <input type="hidden" name="image_url" value="{{ image_url }}">
+                                <input type="hidden" name="seller_name" value="{{ seller_name }}">
+                                <input type="hidden" name="seller_contact" value="{{ seller_contact }}">
+                                <input type="hidden" name="predicted_price" value="{{ predicted_price }}">
+                                
+                                <button type="submit" name="save_item" value="true" class="btn-primary-custom w-100 justify-content-center py-3 fs-5">
+                                    <i class="bi bi-shop me-2"></i>Publish to Verified Marketplace Now
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <span class="brand-icon"><i class="bi bi-recycle"></i></span>
+                SmartResale
+            </div>
+            <p class="mb-0">Built for precision valuation and pre-owned marketplace intelligence.</p>
+        </div>
+        <div class="footer-bottom text-center">
+            © 2026 SmartResale • All Rights Reserved.
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Enhanced WOW UI Interactive Script -->
+<script>
+const urlInput = document.getElementById('imageUrlInput');
+const fileInput = document.getElementById('imageFileInput');
+const dropzonePrompt = document.getElementById('dropzonePrompt');
+const dropzonePreview = document.getElementById('dropzonePreview');
+const urlUploadPane = document.getElementById('urlUploadPane');
+const liveImg = document.getElementById('liveImg');
+const imgErrorMsg = document.getElementById('imgErrorMsg');
+const previewStatus = document.getElementById('previewStatus');
+const fileMetaInfo = document.getElementById('fileMetaInfo');
+const unifiedPhotoCard = document.getElementById('unifiedPhotoCard');
+
+// Switch between Gallery upload and URL paste
+function switchMediaMode(mode) {
+    const tabGallery = document.getElementById('tabGalleryBtn');
+    const tabUrl = document.getElementById('tabUrlBtn');
+
+    if (mode === 'gallery') {
+        if (urlUploadPane) urlUploadPane.style.display = 'none';
+        
+        // Show preview if image exists, else show prompt in that exact place
+        if (liveImg && liveImg.src && liveImg.src !== window.location.href && liveImg.style.display !== 'none') {
+            if (dropzonePreview) dropzonePreview.style.display = 'block';
+            if (dropzonePrompt) dropzonePrompt.style.display = 'none';
+        } else {
+            if (dropzonePrompt) dropzonePrompt.style.display = 'block';
+            if (dropzonePreview) dropzonePreview.style.display = 'none';
+        }
+
+        tabGallery.classList.add('active');
+        tabUrl.classList.remove('active');
+    } else {
+        if (dropzonePrompt) dropzonePrompt.style.display = 'none';
+        if (dropzonePreview) dropzonePreview.style.display = 'none';
+        if (urlUploadPane) urlUploadPane.style.display = 'block';
+        tabUrl.classList.add('active');
+        tabGallery.classList.remove('active');
+        if (urlInput) urlInput.focus();
+    }
+}
+
+// Click anywhere on dropzone triggers native phone/desktop gallery
+function triggerFileInput() {
+    if (fileInput) fileInput.click();
+}
+
+// File selected from gallery or file manager
+if (fileInput) {
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            handleFileSelect(file);
+        }
+    });
+}
+
+function handleFileSelect(file) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        // IN-PLACE REPLACEMENT: Hide prompt and show preview right in the same box
+        if (dropzonePrompt) dropzonePrompt.style.display = 'none';
+        if (urlUploadPane) urlUploadPane.style.display = 'none';
+        if (dropzonePreview) dropzonePreview.style.display = 'block';
+        if (imgErrorMsg) imgErrorMsg.style.display = 'none';
+
+        if (liveImg) {
+            liveImg.style.display = 'inline-block';
+            liveImg.src = event.target.result;
+        }
+        
+        const sizeKB = (file.size / 1024).toFixed(1);
+        const sizeStr = sizeKB > 1024 ? (sizeKB / 1024).toFixed(2) + ' MB' : sizeKB + ' KB';
+        if (previewStatus) {
+            previewStatus.className = 'badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 px-3 py-2 rounded-pill fw-bold';
+            previewStatus.innerHTML = '<i class="bi bi-phone me-1"></i> Gallery Photo Attached (' + sizeStr + ')';
+        }
+        if (fileMetaInfo) {
+            fileMetaInfo.innerHTML = '<span class="text-white fw-bold"><i class="bi bi-file-earmark-image text-info me-1"></i>' + file.name + '</span> &bull; <span class="text-info fw-semibold">' + sizeStr + '</span>';
+        }
+    };
+    reader.readAsDataURL(file);
+}
+
+// Drag & drop support for the unified photo zone
+if (unifiedPhotoCard) {
+    ['dragenter', 'dragover'].forEach(eventName => {
+        unifiedPhotoCard.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            unifiedPhotoCard.classList.add('dragover');
+        }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        unifiedPhotoCard.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            unifiedPhotoCard.classList.remove('dragover');
+        }, false);
+    });
+
+    unifiedPhotoCard.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        if (files && files.length) {
+            fileInput.files = files;
+            handleFileSelect(files[0]);
+        }
+    });
+}
+
+// Live preview when typing or pasting URL
+if (urlInput) {
+    urlInput.addEventListener('input', () => {
+        const url = urlInput.value.trim();
+        if (url) {
+            if (dropzonePrompt) dropzonePrompt.style.display = 'none';
+            if (dropzonePreview) dropzonePreview.style.display = 'block';
+            if (imgErrorMsg) imgErrorMsg.style.display = 'none';
+            if (liveImg) {
+                liveImg.style.display = 'inline-block';
+                liveImg.src = url;
+            }
+            if (previewStatus) {
+                previewStatus.className = 'badge bg-info bg-opacity-25 text-info border border-info border-opacity-50 px-3 py-2 rounded-pill fw-bold';
+                previewStatus.innerHTML = '<i class="bi bi-link-45deg me-1"></i> Web Link Verified';
+            }
+            if (fileMetaInfo) fileMetaInfo.innerHTML = '<span class="text-white">' + url.substring(0, 50) + '...</span>';
+        }
+    });
+}
+
+function handleImgError() {
+    if (imgErrorMsg) imgErrorMsg.style.display = 'block';
+    if (previewStatus) {
+        previewStatus.className = 'badge bg-warning bg-opacity-25 text-warning border border-warning border-opacity-50 px-3 py-2 rounded-pill fw-bold';
+        previewStatus.innerHTML = '<i class="bi bi-exclamation-triangle-fill me-1"></i> Preview Failed';
+    }
+}
+
+// Reset and restore prompt in that exact container
+function clearImagePreview() {
+    if (urlInput) urlInput.value = '';
+    if (fileInput) fileInput.value = '';
+    if (liveImg) {
+        liveImg.src = '';
+        liveImg.style.display = 'none';
+    }
+    if (imgErrorMsg) imgErrorMsg.style.display = 'none';
+    if (fileMetaInfo) fileMetaInfo.innerHTML = '';
+    
+    // RESTORE PROMPT IN THE EXACT SAME CONTAINER
+    if (dropzonePreview) dropzonePreview.style.display = 'none';
+    if (urlUploadPane) urlUploadPane.style.display = 'none';
+    if (dropzonePrompt) dropzonePrompt.style.display = 'block';
+    
+    // Switch active tab back to gallery
+    const tabGallery = document.getElementById('tabGalleryBtn');
+    const tabUrl = document.getElementById('tabUrlBtn');
+    if (tabGallery) tabGallery.classList.add('active');
+    if (tabUrl) tabUrl.classList.remove('active');
+}
+
+// Age Chip selector helper
+function setAge(months, btn) {
+    const ageInput = document.getElementById('ageInput');
+    if (ageInput) {
+        ageInput.value = months;
+    }
+    document.querySelectorAll('.age-chip-btn').forEach(b => b.classList.remove('active'));
+    if (btn) {
+        btn.classList.add('active');
+    }
+}
+
+// Auto-apply suggested brand and resubmit calculation
+function applySuggestedBrand(brandName) {
+    const brandInput = document.getElementById('brandInput');
+    if (brandInput) {
+        brandInput.value = brandName;
+        const form = document.getElementById('valuationForm');
+        if (form) {
+            form.submit();
+        }
+    }
+}
+
+// Auto-scroll to result or error if present on page load
+window.addEventListener('DOMContentLoaded', () => {
+    const res = document.getElementById('valuationResult');
+    if (res) {
+        res.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+});
+</script>
+
+</body>
+</html>
